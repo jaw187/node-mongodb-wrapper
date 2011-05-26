@@ -8,8 +8,7 @@ Yes, we know other people are doing the same thing. This one has been easier to 
 
 ## Features
 
-1. Minimal interface
-2. Interface matches the command-line driver: http://www.mongodb.org/display/DOCS/Manual
+1. Minimal interface closely matching the command-line driver: [http://www.mongodb.org/display/DOCS/Manual](http://www.mongodb.org/display/DOCS/Manual)
 2. Lazy open/close of connections
 3. Most features of [node-mongodb-native][node-mongodb-native]
 
@@ -20,12 +19,12 @@ Yes, we know other people are doing the same thing. This one has been easier to 
 
 ## Usage
 
-The test suite will help you get started. It's almost always the exact interface to the command-line driver, except in two case:
-
 1. You have to tell the db object which collections you're about to use (Harmony Proxies, I need you!)
 2. You have to provide callbacks on "actionable" calls (`toArray`, `count`, but not `find`)
 
-    
+The testing suite will help you get started:
+
+<pre>
     var sys = require('sys')
     var assert = require('assert')
     
@@ -58,7 +57,7 @@ The test suite will help you get started. It's almost always the exact interface
                 db.mongo.basics.findOne(function(err, doc) {
                     if (err) throw err 
                     assert.equal(doc._id, "one")
-                assert.equal(doc.property, "value")
+                	assert.equal(doc.property, "value")
                     assert.finish()
                 })
             })
@@ -648,3 +647,4 @@ The test suite will help you get started. It's almost always the exact interface
     if (module == require.main) {
         require('async_testing').run(__filename, [])
     }
+</pre>
