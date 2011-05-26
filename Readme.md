@@ -1,0 +1,1 @@
+# Exactly-like-the-console wrapper for node-mongodb-native

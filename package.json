@@ -1,0 +1,27 @@
+{
+  "name": "mongodb-wrapper",
+  "description": "Exactly-like-the-console wrapper for node-mongodb-native",
+  "version": "0.1.0",
+  "author": "i.TV <sean@i.tv>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/idottv/node-mongodb-wrapper.git"
+  },
+  "bugs": {
+    "email": "sean@i.tv",
+    "url": "http://github.com/idottv/node-mongodb-wrapper/issues"
+  },
+  "main": "index",
+  "keywords": [
+    "mongodb"
+  ],
+  "engines": {
+    "node": "0.4.x"
+  },
+  "dependencies": {
+    "mongodb": "0.9.x"
+  },
+  "directories": {
+    "lib": "lib"
+  }
+}
