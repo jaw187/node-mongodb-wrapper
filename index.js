@@ -1,1 +1,1 @@
-module.exports = require('./lib/mongo-wrapper')
+module.exports = require('./lib/mongodb-wrapper')
