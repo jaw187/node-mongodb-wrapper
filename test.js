@@ -130,6 +130,32 @@ exports.disableAutoClose = function(assert) {
     })
 }
 
+exports.group = function(assert) {
+    var db = mongo.db("localhost", 27017, "test")
+    db.collection('mongo.testGR')
+    db.collection('mongo.outGR')
+    db.mongo.testGR.remove({})
+    db.mongo.testGR.insert([{_id:"one",friends:[{name:"bad",count:2}]}, {_id:"two",friends:[{name:"bad", count:3},{name:"salsa", count:4}]}], function(err) {
+        db.mongo.testGR.group({
+			key: {},
+			cond: {friends:{$exists:true}},
+        	initial: {},
+        	reduce: function(obj, out) {
+				obj.friends.forEach(function(friend) {
+					if (!out[friend.name]) out[friend.name] = 0
+					out[friend.name] += friend.count
+				})
+        	}
+        }, function(err, result) {
+			assert.equal(result[0].bad, 5)
+			assert.equal(result[0].salsa, 4)
+            assert.ifError(err)
+            assert.finish()
+        })        
+
+    })
+}
+
 exports.mapReduce = function(assert) {
     var db = mongo.db("localhost", 27017, "test")
     db.collection('mongo.testMR')
