@@ -156,6 +156,28 @@ exports.group = function(assert) {
     })
 }
 
+exports.findAndModify = function(assert) {
+    var db = mongo.db("localhost", 27017, "test");
+    db.collection('mongo.testFM');
+	db.mongo.testFM.drop();
+    db.mongo.testFM.insert({_id:"one", count:1, junk:"trash"}, function(err) {
+		assert.ifError(err)
+        db.mongo.testFM.findAndModify({
+        	query:{_id:"one"},
+        	fields:{junk:0},
+        	update:{$inc:{count:1}},
+        	new: true        	
+        }, function(err, result) {
+			assert.ifError(err)
+        	assert.equal(result.count, 2)
+        	assert.ok(!result.junk)
+        	assert.finish()
+        }) 
+    
+    })
+    
+}
+
 exports.mapReduce = function(assert) {
     var db = mongo.db("localhost", 27017, "test")
     db.collection('mongo.testMR')
@@ -639,10 +661,6 @@ exports.autoClose = function(assert) {
         }, mongo.AutoCloseTimeout*2)        
     })
 }
-
-
-
-
 
 if (module == require.main) {
 	require('async_testing').run(__filename, [])
