@@ -660,6 +660,32 @@ exports.autoClose = function(assert) {
             assert.finish()
         }, mongo.AutoCloseTimeout*2)        
     })
+}  
+
+exports.objectId = function(assert) {
+	var db = mongo.db('localhost', 27017, 'test')
+    db.collection('mongo.objectId')
+
+	db.mongo.objectId.save({key:"value"}, function(err, doc) {
+		assert.ifError(err)       
+		
+		// test to see if it passes the id through
+		db.mongo.objectId.findOne({_id: doc._id}, function(err, doc) {
+			assert.ifError(err)
+			assert.ok(doc)                     
+			                              
+			// now re-construct it
+			var stringId = doc._id.toString()          
+			var objectId = new mongo.ObjectID(stringId)
+			
+			db.mongo.objectId.findOne({_id: objectId}, function(err, doc) {
+				assert.ifError(err)
+				assert.ok(doc)                     
+				assert.finish()   							                                                           
+			})
+		})
+	})
+    
 }
 
 if (module == require.main) {
