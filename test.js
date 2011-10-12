@@ -4,7 +4,7 @@ var assert = require('assert')
 
 // normally you make one per test, but here
 // we'll reuse it for each
-var mongo = require('./lib/mongodb-wrapper')
+var mongo = require('./lib/mongodb-wrapper')     
 
 exports.basics = function(assert) {
     var db     = mongo.db("localhost", 27017, "test")
@@ -685,7 +685,55 @@ exports.objectId = function(assert) {
 			})
 		})
 	})
+}     
+
+exports.reconnect = function(assert) {
     
+    // Make sure we can recover from an error. 
+    
+    var db = mongo.db('localhost', 27017, 'test')
+    db.collection('mongo.reconnect') 
+    
+    var collection = db.mongo.reconnect
+    mongo.log = sys.log
+    
+    db.connection(function(err, connection) {
+        assert.ifError(err)
+        assert.ok(connection)   
+        
+        connection.emit("error", "Fake Error")
+        // connection.done()   
+        
+        // no, this doesn't explain why it couldn't reconnect on subsequent onces
+        
+        collection.save({woot:"true"}, function(err, doc) {
+            assert.ifError(err)
+            assert.ok(doc)
+            assert.finish()
+        })            
+                             
+    })
+           
+    // console.log("STOP MONGO NOW")
+    // setTimeout(function() {
+    //     collection.save({woot:"value"}, function(err, doc) {
+    //         assert.ok(err, "Should have seen an error")                                     
+    //         
+    //         console.log("START MONGO AGAIN")
+    //         setTimeout(function() {
+    //                            
+    //             collection.save({woot:"value"}, function(err, doc) {
+    //                 assert.ifError(err)                                     
+    //                 assert.ok(doc)
+    //                 assert.finish()
+    //             })
+    //         }, 2000)
+    //     })
+    // }, 2000)
+    // 
+
+	
+	
 }
 
 if (module == require.main) {
