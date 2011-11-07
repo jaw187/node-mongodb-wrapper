@@ -19,7 +19,7 @@
     "node": "0.4.x"
   },
   "dependencies": {
-    "mongodb": "0.9.x",
+    "mongodb": "0.9.6-23",
     "async_testing": "0.3.2"
   },
   "directories": {

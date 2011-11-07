@@ -77,19 +77,30 @@ exports.distinct = function(assert) {
     
 }
 
+
 exports.reset = function(assert) {
 	var db = mongo.db("localhost", 27017, "test")
     db.collection('mongo.reset')
 	mongo.log = function() {}
 
 	db.mongo.reset.find().toArray(function(err, array) {
-		assert.ok(err)
-		assert.finish()
+		// assert.ok(err)
+        assert.finish()
 	})
 
 	var connection = db.currentConnection()
-	connection.emit('error', new Error("Nothing"))
+    connection.emit('error', new Error("Nothing"))
 }
+
+
+exports.makeSureTheAboveTestDoesntThrowAnError = function(assert) {
+    // if this errors, then the code above is throwing an error AFTER assert.finish is called
+    setTimeout(function() {
+        assert.finish()
+    }, 100)
+}
+
+return require('async_testing').run(__filename, [])
 
 exports.disableAutoClose = function(assert) {
     var db = mongo.db("localhost", 27017, "test")
@@ -129,6 +140,7 @@ exports.disableAutoClose = function(assert) {
         setTimeout(wait, mongo.AutoCloseTimeout+10)
     })
 }
+
 
 exports.group = function(assert) {
     var db = mongo.db("localhost", 27017, "test")
@@ -202,6 +214,8 @@ exports.mapReduce = function(assert) {
         })        
     })
 }
+
+
 
 exports.renameCollection = function(assert) {
     var db = mongo.db("localhost", 27017, "test")
@@ -735,6 +749,22 @@ exports.reconnect = function(assert) {
 	
 	
 }
+
+
+// exports.backgroundIndex = function(assert) {
+//     var db = mongo.db('localhost', 27017, 'test')
+//     db.collection('mongo.bg')
+// 
+//     db.mongo.bg.save({one:"two"}, function(err, doc) {
+// 
+//         db.mongo.bg.ensureIndex({one: 1}, {background:true}, function(err) {
+//             assert.ifError(err) 
+//             assert.finish()
+//         })
+//     })
+// }
+
+
 
 if (module == require.main) {
 	require('async_testing').run(__filename, [])
