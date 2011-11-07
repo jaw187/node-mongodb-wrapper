@@ -100,8 +100,6 @@ exports.makeSureTheAboveTestDoesntThrowAnError = function(assert) {
     }, 100)
 }
 
-return require('async_testing').run(__filename, [])
-
 exports.disableAutoClose = function(assert) {
     var db = mongo.db("localhost", 27017, "test")
     db.collection('mongo.disableAutoClose')
@@ -751,18 +749,23 @@ exports.reconnect = function(assert) {
 }
 
 
-// exports.backgroundIndex = function(assert) {
-//     var db = mongo.db('localhost', 27017, 'test')
-//     db.collection('mongo.bg')
-// 
-//     db.mongo.bg.save({one:"two"}, function(err, doc) {
-// 
-//         db.mongo.bg.ensureIndex({one: 1}, {background:true}, function(err) {
-//             assert.ifError(err) 
-//             assert.finish()
-//         })
-//     })
-// }
+exports.backgroundIndex = function(assert) {
+    var db = mongo.db('localhost', 27017, 'test')
+    db.collection('mongo.bg')
+
+    db.mongo.bg.save({one:"two"}, function(err, doc) {
+
+        db.mongo.bg.ensureIndex({one: 1}, { background: true }, function(err) {
+            assert.ifError(err) 
+
+            var cursor = db.mongo.bg.find({one:"two"})
+            cursor.explain(function(err, explanation) {
+                assert.ifError(err)
+                assert.finish()
+            })
+        })
+    })
+}
 
 
 
